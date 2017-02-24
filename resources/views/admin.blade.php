@@ -13,7 +13,31 @@
             
                             <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                                 {{ csrf_field() }}
-                            </form>        <div class="col-md-10">
+                            </form>        
+
+            <div class="col-sm-5">
+            <label>Search By District:</label> 
+            <form class="form-inline" method="post" action="{{url('/search')}}">
+                       {{ csrf_field() }}
+                <select  name="district_involved"  class="form-control" required>
+                                            <option value=""  disabled selected>--Select A District--</option>
+                                                @foreach($districts as $district)
+                                                    <option value="{{$district->district_name}}">{{$district->district_name}}</option>
+                                                @endforeach                
+                </select><br><br>
+                <button  type="submit" class="btn btn-primary">Search</button>
+            </form>
+            </div>
+            <div class="col-sm-5">
+                @if($flag=='method1')
+                    <h1>All Districts</h1>
+                @else 
+                    <h1>{{$district_involved}}
+                @endif
+            </div>
+
+
+        <div class="col-md-10"><br><br>
             <table class="table table-hover table1">
                 <h3>Members Awaiting Approval:</h3><br>
                 <thead><tr><td>S.N.</td><td>Name</td><td>Date of Birth</td><td>Created At</td><td>Involving District</td><td>Options</td></tr></thead>

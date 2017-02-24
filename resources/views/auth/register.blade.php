@@ -8,7 +8,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Membership Registration Form</div>
                     <div class="panel-body">
-                        <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
+                        <form class="form-horizontal" enctype="multipart/form-data" id="register-form" role="form" method="POST" action="{{ url('/register') }}">
                         {{ csrf_field() }}
 
 
@@ -83,7 +83,7 @@
                             <label for="name" class="col-md-4 control-label">Gender</label>
 
                             <div class="col-md-6">
-                                <select class="form-control" name="gender" value="{{ old('gender') }}" required autofocus>
+                                <select class="form-control" name="gender"  required autofocus>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
@@ -103,7 +103,7 @@
 
                                             <label>Region:</label>
                                             <select  name="region" id="region" value="{{ old('region') }}"  class="form-control" required>
-                                            <option value="" disabled selected>--Select a Region--</option>
+                                            <option disabled selected value="" >--Select a Region--</option>
                                                 @foreach($region as $reg)
                                                     <option value="{{$reg->id}}">{{$reg->region_name}}</option>
                                                 @endforeach                
@@ -115,7 +115,8 @@
                                                 @endif
 
                                             <label>Zone:</label>
-                                                <select name="zone" id="zone" value="{{ old('zone') }}"  class="form-control zone" required> <option value="" disabled selected>--Select a Zone--</option>
+                                                <select name="zone" id="zone"  class="form-control zone" required> 
+                                                <option value="" disabled selected>--Select a Zone--</option>
                                             </select><br>
                                               @if ($errors->has('zone'))
                                                     <span class="help-block">
@@ -352,10 +353,10 @@
 
                         <div class="form-group">
 
-                            <div class="col-md-12">
-                               
-                                <label class="col-md-12 control-label"> <input type="checkbox" required> I agree to the <a href="">Terms and Conditions</a> of National Youth Federation Nepal.</label>
+                            <div class="col-md-12">                               
+                                <label class="col-md-12 control-label"> <input type="checkbox" name="agreement"> I agree to the <a href="">Terms and Conditions</a> of National Youth Federation Nepal.</label>
                             </div>
+
                         </div>
                       
 
@@ -369,17 +370,69 @@
 
 
                         </form>
-                    </div>
+                
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script type="text/javascript">
-      $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd'
+<script >
+
+
+$(document).ready(function(){
+
+    $('#register-form').validate({
+    rules: 
+        {
+            mobile:{number:true,required:true,maxlength:10},
+            region:{required:true},
+            phone:{number:true,maxlength:10},
+            office_phone:{number:true,maxlength:10},
+            father_name:{required:true},
+            mother_name:{required:true},
+            dob:{required:true,date:true},
+            gender:{required:true},
+            
+            name:{required:true},
+            agreement:{required:true},
+
+            email:{required:true,
+                    email:true,
+                    remote:
+                      {
+                            url: "{{url('/checkEmail')}}",
+                            type: "post",
+                      }
+                  },
+
+            password : {
+                    minlength : 8
+                },
+                password_confirmation : {
+                    minlength : 8,
+                    equalTo : "#password",
+                },
+
+
+        },
+        messages:
+        {
+            email:{required:'Email is required.',
+                  remote:'Account already exists with this email',
+                 },
+            phone:{required:'Phone Number is required.', number:'Only Numbers allowed,',maxlength:'Phone Number should be maximum of 10 digits'},
+            office_phone:{required:'Phone Number is required.', number:'Only Numbers allowed,',maxlength:'Phone Number should be maximum of 10 digits'},
+            mobile:{required:'Phone Number is required.', number:'Only Numbers allowed,',maxlength:'Phone Number should be maximum of 10 digits'},
+            agreement:{required:'Please tick this box and proceed.'}
+        },
     });
+});
+
+
+$('.datepicker').datepicker({
+      format: 'yyyy-mm-dd'
+});
 
 
 $("#input-id").fileinput({
@@ -476,7 +529,7 @@ $.ajaxSetup({
                             var zone ='<option value="">--Select a Zone--</option>';
                             for(var i=0;  i<res.zone.length;  i++) 
                             {
-                                zone += '<option value="' + res.zone[i].id + '">'+res.zone[i].zone_name+'</option>';
+                                zone += '<option value="' + res.zone[i].id + '" {{ old('region') == $reg->id ? 'selected' : '' }}>'+res.zone[i].zone_name+'</option>';
                                 $('#tzone').html(zone);                                                                    
                             }
                       }

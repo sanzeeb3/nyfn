@@ -10,7 +10,7 @@
                 <div class="panel-heading">Update Form</div>
 
                     <div class="panel-body">
-                        <form class="form-horizontal" role="form" method="POST" action="{{ url('/update', [$user->id]) }}">
+                        <form class="form-horizontal" id="edit-form" role="form" method="POST" action="{{ url('/update', [$user->id]) }}">
                         {{ csrf_field() }}
 
 
@@ -399,7 +399,7 @@
 
 
                         </form>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -409,6 +409,50 @@
 
 
 <script type="text/javascript">
+
+$(document).ready(function(){
+
+    $('#edit-form').validate({
+    rules: 
+        {
+            mobile:{number:true,required:true,maxlength:10},
+            phone:{number:true,maxlength:10},
+            office_phone:{number:true,maxlength:10},
+            father_name:{required:true},
+            mother_name:{required:true},
+            dob:{required:true,date:true},
+            gender:{required:true},
+            
+            name:{required:true},
+
+            email:{required:true,
+                    email:true,
+                   
+                  },
+
+            password : {
+                    minlength : 8
+                },
+                password_confirmation : {
+                    minlength : 8,
+                    equalTo : "#password",
+                },
+
+
+        },
+        messages:
+        {
+            email:{required:'Email is required.',
+        
+                 },
+            phone:{required:'Phone Number is required.', number:'Only Numbers allowed,',maxlength:'Phone Number should be maximum of 10 digits'},
+            office_phone:{required:'Phone Number is required.', number:'Only Numbers allowed,',maxlength:'Phone Number should be maximum of 10 digits'},
+            mobile:{required:'Phone Number is required.', number:'Only Numbers allowed,',maxlength:'Phone Number should be maximum of 10 digits'},
+        },
+    });
+});
+
+
       $('.datepicker').datepicker({
       format: 'yyyy-mm-dd'
     });

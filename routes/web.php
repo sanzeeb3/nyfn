@@ -30,6 +30,7 @@ Route::group(['middleware' => ['App\Http\Middleware\AdminMiddleware']], function
 	Route::get('/show/{id}', 'NyfnController@show');		
 	Route::post('/delete', 'NyfnController@delete');
     Route::post('/approve', 'NyfnController@approve');
+    Route::post('/search', 'NyfnController@search');
 });
 
 Route::post('/getZone', 'NyfnController@getZone');
@@ -42,3 +43,5 @@ Route::group(['middleware'=>'auth'],function(){
 	Route::post('/update/{id}', 'NyfnController@update');
 
 });
+
+    Route::post('/checkEmail', 'NyfnController@checkEmail');

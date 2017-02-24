@@ -13,11 +13,35 @@ use File;
 
 class NyfnController extends Controller
 {
-    
     public function admin()
     {
+        $subWeek=Carbon::now()->subWeek();
+
         $users=User::all();
-        return view('admin')->with('users',$users);
+        $districts=District::all();
+        foreach($users as $user)
+        {
+            if($user->created_at < $subWeek && $user->is_approved != 1)
+            {
+                 $file_path = app_path("uploads/masters/logocatagory_Computers/{$user->image}");
+
+                 if(File::exists($file_path)) 
+                    {
+                        File::delete($file_path); 
+                    }  
+                
+                $user->delete();
+            }
+        }
+        return view('admin')->with(['users'=>$users,'districts'=>$districts,'flag'=>'method1']);
+    }
+
+    public function search(Request $request)
+    {
+        $users=User::where('district_involved',$request->district_involved)->get();
+        $districts=District::all();
+
+        return view('admin')->with(['users'=>$users,'districts'=>$districts,'district_involved'=>$request->district_involved, 'flag'=>'method2']);
     }
 
     public function registerMember()
@@ -150,7 +174,7 @@ class NyfnController extends Controller
 
     public function uploadimage()
     {
-        $target_dir = 'C:\xampp\htdocs\nyfn application\public\newuploads';
+        $target_dir = public_path('newuploads');
         $tmpname = $_FILES["image"]["tmp_name"];
         $temp = explode(".", $_FILES["image"]["name"]);
         $newfilename = round(microtime(true)) . '.' . end($temp);
@@ -163,4 +187,21 @@ class NyfnController extends Controller
             echo json_encode(false);die;
         }
     }
+
+    public function checkEmail(Request $request)
+    {
+        if($request->ajax())
+        {
+            $check=User::where(['email'=>$request->email])->first();
+            if(!$check)
+            {
+                echo json_encode(TRUE);die;
+            }
+
+            echo json_encode(FALSE);die;
+        }   
+    }
+
 }
+
+

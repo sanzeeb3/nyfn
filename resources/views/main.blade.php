@@ -17,16 +17,21 @@
 <script src="{{asset('public/fileinput/fileinput.js')}}"></script>
 <link href="{{asset('public/fileinput/fileinput.css')}}" rel="stylesheet">
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.min.css"/>
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.min.js"></script>
-<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{{asset('public/datatables.min.css')}}">
+<script type="text/javascript" src="{{asset('public/datatables.min.js')}}"></script>
 
 <style>
 img
 {
 	border:3px solid black;
 }
+.error {
+    color:red;
+}
+.valid {
+    color:green;
+}
+
 .img-wrap {
     position: relative;
     ...
