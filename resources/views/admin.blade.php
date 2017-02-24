@@ -26,13 +26,12 @@
                         <td>{{$user->district_involved}}</td>
                         <td>
                             <a href="{{url('/show', [$user->id])}}"><button class="btn btn-info">Show Details</button></a>
-                            <a href="{{url('/approve', [$user->id])}}"><button class="btn btn-primary">Approve</button></a>
+                            <a href="" class="approve" data-id="<?php echo $user->id;?>"><button class="btn btn-primary">Approve</button></a>
                             <a href="" class="delete" data-id="<?php echo $user->id;?>"><button class="btn btn-danger">Delete</button>                              
                         </td>
                     </tr>
                 @endforeach
-                </tbody>
-                
+                </tbody>                
             </table>
         </div>
     </div>
@@ -51,7 +50,11 @@
                
                     <tr><td>{{$i++}}</td><td>{{$user->name}}</td><td>{{$user->dob}}</td><td>{{$user->created_at->toDateString()}}</td>   <td>{{$user->district_involved}}</td><td>
                             <a href="{{url('/show', [$user->id])}}"><button class="btn btn-info">Show Details</button></a>
-                            <a href="" class="delete" data-id="<?php echo $user->id;?>"><button class="btn btn-danger">Delete</button>                              
+                            @if($user->id != auth()->user()->id)
+                                <a href="" class="delete" data-id="<?php echo $user->id;?>"><button class="btn btn-danger">Delete</button>
+                            @else
+                                <a href="" class="delete" data-id="<?php echo $user->id;?>"><button class="btn btn-danger" disabled>Delete</button>
+                            @endif                              
                         </td>
                     </tr>
                 @endforeach
@@ -63,6 +66,77 @@
 </div>
     
 <script>
+
+$(document).on('click', '.delete', function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+
+    swal({
+            title: "Are you sure you!",
+            type: "error",
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Yes!",
+            showCancelButton: true,
+        },
+        function() {
+           $.ajax({
+                type:"POST",
+                url: "{{url('/delete')}}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id": id
+                },
+
+                success: function (data) {
+                    var res=data;
+                    if(res.status == true) {
+                        swal("Member Removed", "", "success");
+                        window.location.reload();
+                    }
+                }
+            });
+        },
+        function() {
+            window.location.reload();        }
+    );
+});
+
+
+$(document).on('click', '.approve', function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+
+    swal({
+            title: "Are you sure you!",
+            type: "error",
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Yes!",
+            showCancelButton: true,
+        },
+        function() {
+           $.ajax({
+                type:"POST",
+                url: "{{url('/approve')}}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id": id
+                },
+
+                success: function (data) {
+                    var res=data;
+                    if(res.status == true) {
+                        swal("Member Approved", "", "success");
+                        window.location.reload();
+                    }
+                }
+            });
+        },
+        function() {
+            window.location.reload();        }
+    );
+});
+
+
 $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

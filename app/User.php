@@ -14,6 +14,32 @@ class User extends Authenticatable
     protected $dates = ['deleted_at'];
 
     protected $guarded = ['id'];
+
+    public function region(){
+        return $this->belongsTo(Region::class, 'region_id');
+    }
+
+    public function tempRegion(){
+        return $this->belongsTo(Region::class, 'tregion_id');
+    }
+
+    public function zone(){
+        return $this->belongsTo(Zone::class, 'zone_id');
+    }
+
+    public function tempZone(){
+        return $this->belongsTo(Zone::class, 'tzone_id');
+    }
+
+
+    public function district(){
+        return $this->belongsTo(District::class, 'district_id');
+    }
+
+    public function tempDistrict(){
+        return $this->belongsTo(District::class, 'tdistrict_id');
+    }
+
     /**
      * The attributes that are mass assignable.
      *
